@@ -21,14 +21,14 @@ def download_data():
                    'Ahead only', 'Go straight or right', 'Go straight or left', 'Keep right', 'Keep left',
                    'Roundabout mandatory', 'End of no passing', 'End of no passing by vehicles over 3.5 metric tons']
 
-    with open(f'pickles/data0.pickle', 'rb') as f:
+    with open(f'../pickles/data0.pickle', 'rb') as f:
         img_list = pickle.load(f)
 
     output = []
 
     for idx, (img, label) in enumerate(zip(img_list['x_train'], img_list['y_train'])):
-        output.append({'file_name': f'{idx}.png', 'label': label, 'label_name': label_names[label]})
         plt.imsave(f'images/{idx}.png', np.transpose(np.reshape(img, (3, 32, 32)), (1, 2, 0)))
+        output.append({'file_name': f'{idx}.png', 'label': label, 'label_name': label_names[label]})
 
     df = pd.DataFrame(output)
     df.to_csv('label_lookup.csv', index=False)
