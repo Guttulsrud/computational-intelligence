@@ -1,11 +1,7 @@
 import tensorflow as tf
 import pandas as pd
 import numpy as np
-from os import listdir
 import cv2
-from pandas import DataFrame
-import tensorflow_datasets as tfds
-
 
 def view_image(img_name):
     img = cv2.imread(f'../images/{img_name}')

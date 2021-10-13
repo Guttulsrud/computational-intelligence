@@ -2,3 +2,5 @@ tensorflow
 pandas
 numpy
 tensorflow-datasets
+opencv-python
+matplotlib
