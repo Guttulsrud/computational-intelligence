@@ -16,7 +16,7 @@ def view_image(img_name):
 
 
 def get_files_by_labels(labels: list) -> dict:
-    df = pd.read_csv('label_lookup.csv')
+    df = pd.read_csv('../src/label_lookup.csv')
     filtered_rows = df[df['label'].isin(labels)]
     return filtered_rows
 
@@ -32,7 +32,9 @@ map = {
 }
 
 labels = [map[x] for x in labels]
-file_names = [f'../ee/{file_name}' for file_name in file_names]
+
+file_names = [f'../images/{file_name}' for file_name in file_names]
+
 files = np.array([cv2.imread(f'../images/{file_name}') for file_name in file_names])
 
 y = np.array(labels)
@@ -42,6 +44,8 @@ model = tf.keras.Sequential([
     tf.keras.layers.Flatten(input_shape=(32, 32, 3)),
     tf.keras.layers.Dense(2)
 ])
+
+
 
 model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
