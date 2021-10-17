@@ -1,4 +1,7 @@
 import tensorflow as tf
+from datetime import datetime
+import json
+import os
 
 
 def get_base_model(name, trainable=False, weights='imagenet'):
@@ -26,3 +29,13 @@ def get_base_model(name, trainable=False, weights='imagenet'):
     pre_trained_base_model.trainable = trainable
 
     return pre_trained_base_model
+
+
+def save_results_to_file(results):
+    now = datetime.now()
+    dt_string = now.strftime("%Y-%m-%d-%H-%M-%S")
+    path = f'training_results/{dt_string}'
+    os.mkdir(path)
+
+    with open(f'{path}/results.json', 'w') as outfile:
+        json.dump(results, outfile)
