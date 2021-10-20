@@ -10,7 +10,7 @@ from tensorflow.keras import Input
 
 
 def get_files_by_labels(labels: list) -> dict:
-    df = pd.read_csv('../label_lookup.csv')
+    df = pd.read_csv('label_lookup.csv')
     filtered_rows = df[df['label'].isin(labels)]
     return filtered_rows
 
