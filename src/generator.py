@@ -1,72 +1,76 @@
 import pandas as pd
 import numpy as np
 import cv2
+import tensorflow as tf
+
+lookup_table = 'label_lookup.csv'
+data_path = '../images/'
 
 
-class Generator:
-    def __init__(self, config=None):
-        self.data_path = '../images/'
-        self.lookup_table = 'label_lookup.csv'
+def get_data_generators(config: dict):
+    df = get_data_from_labels(config['labels'])
+    df['file_name'] = data_path + df['file_name']
+
+    validation_data = df.sample(frac=config['validation_split'])
+    temp = df.drop(validation_data.index)
+    test_data = temp.sample(frac=config['test_split'])
+    train_data = temp.drop(test_data.index)
+
+    train_data_generator = Generator(train_data, config)
+    validation_data_generator = Generator(validation_data, config)
+    test_data_generator = Generator(test_data, config)
+
+    return train_data_generator, validation_data_generator, test_data_generator
+
+
+def get_data_from_labels(labels: list) -> pd.DataFrame:
+    df = pd.read_csv(lookup_table)
+    df = df[df['label'].isin(labels)]
+    # Add extraction of self.config['images_per_class']
+    return df
+
+
+class Generator(tf.keras.utils.Sequence):
+    def __init__(self, df, config=None):
         self.config = config
+        self.df = df
+        self.data_length = len(self.df)
+        self.batch_size = config['batch_size']
 
-    def get_data(self):
-        df = self.__get_data_from_labels(self.config['labels'])
-        df['file_name'] = self.data_path + df['file_name']
+    def on_epoch_start(self):
+        # def on_epoch_end(self):
+        if self.shuffle:
+            self.df = self.df.sample(frac=1).reset_index(drop=True)
 
-        image_shape = self.config['image_shape']
-        batch_size = self.config['batch_size']
+    def __get_input(self, path):
+        image = tf.keras.preprocessing.image.load_img(path)
+        image = tf.keras.preprocessing.image.img_to_array(image)
+        image = self.__augment_image(image)
 
-        batch_of_images = np.zeros((batch_size, image_shape[0], image_shape[1], image_shape[2]))
-        batch_of_labels = np.zeros((batch_size, len(self.config['labels'])))
+        return image / 255.
 
-        while True:
+    def __get_output(self, label):
+        one_hot_label = np.zeros(len(self.config['labels']))
+        one_hot_label[self.config['labels'].index(label)] = 1
+        return one_hot_label
 
-            df = df.sample(frac=1)
+    def __get_data(self, batches):
+        path_batch = batches['file_name']
+        label_batch = batches['label']
 
-            for count, row in enumerate(df.iterrows()):
-                row = row[1]
-                file_path = row['file_name']
-                label = row['label']
+        x_batch = np.asarray([self.__get_input(path) for path in path_batch])
+        y_batch = np.asarray([self.__get_output(label) for label in label_batch])
 
-                image = cv2.imread(file_path)
-                image = self.__augment_image(image)
+        return x_batch, y_batch
 
-                one_hot_label = np.zeros(len(self.config['labels']))
-                one_hot_label[self.config['labels'].index(label)] = 1
-
-                batch_of_images[count % batch_size] = image
-                batch_of_labels[count % batch_size] = one_hot_label
-
-                if count % batch_size == batch_size - 1:
-                    yield batch_of_images, batch_of_labels
-
-    def __get_data_from_labels(self, labels: list) -> dict:
-        df = pd.read_csv(self.lookup_table)
-        df = df[df['label'].isin(labels)]
-        # Add extraction of self.config['images_per_class']
-        return df
+    def __getitem__(self, index):
+        batches = self.df[index * self.batch_size:(index + 1) * self.batch_size]
+        x, y = self.__get_data(batches)
+        return x, y
 
     def __augment_image(self, image):
-        image = cv2.resize(image, (150, 150))
+        image = cv2.resize(image, (150, 150), interpolation=cv2.INTER_AREA)
         return image
 
-
-def view_image(img_name):
-    img = cv2.imread(f'../images/{img_name}')
-    img = cv2.resize(img, (500, 500), interpolation=cv2.INTER_AREA)
-    cv2.imshow('', img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-
-if __name__ == '__main__':
-    config = {
-        'batch_size': 32,
-        'images_per_class': 2000,
-        'validation_split': 0.8,
-        'labels': [0, 1, 23],
-        'image_shape': (150, 150, 3)
-    }
-    g = Generator(config)
-    generator = g.get_data()
-    next(generator)
+    def __len__(self):
+        return self.data_length // self.batch_size

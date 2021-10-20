@@ -1,10 +1,10 @@
 import pandas as pd
-from keras.layers import Dense, Dropout
+from tensorflow.keras.layers import Dense, Dropout
 from tensorflow import keras
 import matplotlib.pyplot as plt
 from datetime import datetime
 
-from src.generator import Generator
+from src.generator import get_data_generators
 from src.models.utils import get_base_model, save_results_to_file
 from tensorflow.keras import Input
 
@@ -18,12 +18,13 @@ def get_files_by_labels(labels: list) -> dict:
 config = {
     'batch_size': 32,
     'images_per_class': 2000,
-    'validation_split': 0.8,
+    'validation_split': 0.2,
+    'test_split': 0.2,
     'labels': [0, 1, 23],
     'image_shape': (150, 150, 3)
 }
-g = Generator(config)
-generator = g.get_data()
+
+train_generator, validation_generator, test_generator = get_data_generators(config)
 
 models = [
     'Xception',
@@ -62,7 +63,8 @@ for pre_trained_model in models:
     early_stopping_callback = keras.callbacks.EarlyStopping(monitor='val_accuracy', patience=10)
 
     history = model.fit(
-        generator,
+        train_generator,
+        validation_data=validation_generator,
         epochs=30,
         callbacks=[early_stopping_callback],
     )
