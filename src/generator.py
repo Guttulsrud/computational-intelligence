@@ -5,7 +5,7 @@ import cv2
 
 class Generator:
     def __init__(self, config=None):
-        self.data_path = '../../images/'
+        self.data_path = '../images/'
         self.lookup_table = '../label_lookup.csv'
         self.config = config
 
