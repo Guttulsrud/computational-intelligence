@@ -5,19 +5,19 @@ import cv2
 
 class Generator:
     def __init__(self, config=None):
-        self.data_path = '../images/'
-        self.lookup_table = 'label_lookup.csv'
+        self.data_path = '../../images/'
+        self.lookup_table = '../label_lookup.csv'
         self.config = config
 
-    def get_data(self, labels: list):
-        df = self._get_data_from_labels(labels)
+    def get_data(self):
+        df = self.__get_data_from_labels(self.config['labels'])
         df['file_name'] = self.data_path + df['file_name']
 
-        image_shape = (32, 32, 3)
+        image_shape = self.config['image_shape']
         batch_size = self.config['batch_size']
 
         batch_of_images = np.zeros((batch_size, image_shape[0], image_shape[1], image_shape[2]))
-        batch_of_labels = np.zeros((batch_size, 1))
+        batch_of_labels = np.zeros((batch_size, len(self.config['labels'])))
 
         while True:
 
@@ -29,21 +29,25 @@ class Generator:
                 label = row['label']
 
                 image = cv2.imread(file_path)
-                image = self._augment_image(image)
+                image = self.__augment_image(image)
+
+                one_hot_label = np.zeros(len(self.config['labels']))
+                one_hot_label[self.config['labels'].index(label)] = 1
 
                 batch_of_images[count % batch_size] = image
-                batch_of_labels[count % batch_size] = label
+                batch_of_labels[count % batch_size] = one_hot_label
 
                 if count % batch_size == batch_size - 1:
                     yield batch_of_images, batch_of_labels
 
-    def _get_data_from_labels(self, labels: list) -> dict:
+    def __get_data_from_labels(self, labels: list) -> dict:
         df = pd.read_csv(self.lookup_table)
         df = df[df['label'].isin(labels)]
+        # Add extraction of self.config['images_per_class']
         return df
 
-    def _augment_image(self, image):
-        # Here we will add augmentation to images
+    def __augment_image(self, image):
+        image = cv2.resize(image, (150, 150))
         return image
 
 
@@ -56,8 +60,13 @@ def view_image(img_name):
 
 
 if __name__ == '__main__':
-    gen_config = {
-        'batch_size': 32
+    config = {
+        'batch_size': 32,
+        'images_per_class': 2000,
+        'validation_split': 0.8,
+        'labels': [0, 1, 23],
+        'image_shape': (150, 150, 3)
     }
-    g = Generator(gen_config)
-    generator = g.get_data([0, 1, 23])
+    g = Generator(config)
+    generator = g.get_data()
+    next(generator)
