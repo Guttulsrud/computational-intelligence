@@ -3,7 +3,6 @@ from tensorflow.keras.layers import Dense, Dropout
 from tensorflow import keras
 import matplotlib.pyplot as plt
 from datetime import datetime
-
 from src.generator import get_data_generators
 from src.models.utils import get_base_model, save_results_to_file
 from tensorflow.keras import Input
@@ -23,6 +22,9 @@ config = {
     'labels': [0, 1, 23],
     'image_shape': (150, 150, 3)
 }
+
+log_dir = "logs/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
 
 train_generator, validation_generator, test_generator = get_data_generators(config)
 
@@ -64,9 +66,10 @@ for pre_trained_model in models:
 
     history = model.fit(
         train_generator,
+        batch_size=config['batch_size'],
         validation_data=validation_generator,
         epochs=30,
-        callbacks=[early_stopping_callback],
+        callbacks=[early_stopping_callback, tensorboard_callback],
     )
 
     trained_models.append(pre_trained_model)
