@@ -2,6 +2,9 @@ import pandas as pd
 import numpy as np
 import cv2
 import tensorflow as tf
+import imgaug.augmenters as iaa
+from numpy.random import default_rng
+
 
 lookup_table = 'label_lookup.csv'
 data_path = '../images/'
@@ -36,6 +39,7 @@ class Generator(tf.keras.utils.Sequence):
         self.df = df
         self.data_length = len(self.df)
         self.batch_size = config['batch_size']
+        self.__set_agumentation()
 
     def on_epoch_start(self):
         # def on_epoch_end(self):
@@ -59,18 +63,48 @@ class Generator(tf.keras.utils.Sequence):
         label_batch = batches['label']
 
         x_batch = np.asarray([self.__get_input(path) for path in path_batch])
-        y_batch = np.asarray([self.__get_output(label) for label in label_batch])
+        y_batch = np.asarray([self.__get_output(label)
+                             for label in label_batch])
 
         return x_batch, y_batch
 
     def __getitem__(self, index):
-        batches = self.df[index * self.batch_size:(index + 1) * self.batch_size]
+        batches = self.df[index *
+                          self.batch_size:(index + 1) * self.batch_size]
         x, y = self.__get_data(batches)
         return x, y
 
-    def __augment_image(self, image):
+    def __augment_image(self, image, n_filters=-1):
         image = cv2.resize(image, (150, 150), interpolation=cv2.INTER_AREA)
+
+        if n_filters == -1:
+            num_filters = np.random.randint(0, len(self.augmenters))
+        else:
+            num_filters = n_filters
+
+        rng = default_rng()
+        filter_index = rng.choice(
+            len(self.augmenters), size=num_filters, replace=False)
+
+        image = image.astype(np.uint8)
+
+        for index in filter_index:
+            filter = self.augmenters[index]
+            image = filter(image=image)
+
         return image
 
     def __len__(self):
         return self.data_length // self.batch_size
+
+    def __set_agumentation(self):
+        gauss_noise = iaa.AdditiveGaussianNoise(scale=(0.01*255, 0.09*255))
+        cutout = iaa.Cutout(nb_iterations=(5, 10), size=0.1)
+        snow = iaa.imgcorruptlike.Snow(severity=(1, 2))
+        gauss_blur = iaa.GaussianBlur(sigma=(5, 20))
+        brightness = iaa.MultiplyBrightness((0.5, 3))
+        dropout = iaa.CoarseDropout((0.05, 0.10), size_percent=0.1)
+        crop = iaa.Crop(px=(10, 50), sample_independently=True)
+
+        self.augmenters = [gauss_blur, gauss_noise,
+                           cutout, dropout, crop, snow, brightness]
