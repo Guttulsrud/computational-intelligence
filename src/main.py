@@ -3,6 +3,7 @@ from tensorflow.keras.layers import Dense, Dropout
 from tensorflow import keras
 import matplotlib.pyplot as plt
 from datetime import datetime
+from tensorflow.keras import mixed_precision
 
 from src.generator import get_data_generators
 from src.models.utils import get_base_model, save_results_to_file
@@ -41,6 +42,7 @@ number_of_classes = len(config['labels'])
 trained_models = []
 
 start_time = datetime.now()
+mixed_precision.set_global_policy('mixed_float16')
 
 for pre_trained_model in models:
     print(f'Running model {pre_trained_model}')
