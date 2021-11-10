@@ -2,6 +2,10 @@
 ACIT 4620 
 ----------
 
+Tensorboard:
+> cd src
+
+> tensorboard --logdir logs
 
 Classes:
 
