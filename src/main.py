@@ -6,7 +6,7 @@ from datetime import datetime
 from src.generator import get_data_generators
 from src.models.utils import get_base_model, save_results_to_file
 from tensorflow.keras import Input
-
+import tensorflow as tf
 
 def get_files_by_labels(labels: list) -> dict:
     df = pd.read_csv('label_lookup.csv')
@@ -44,27 +44,29 @@ trained_models = []
 
 start_time = datetime.now()
 
-for pre_trained_model in models:
-    print(f'Running model {pre_trained_model}')
-    base_model = get_base_model(name=pre_trained_model)
 
+def create_model(model_name):
+    base_model = get_base_model(name=model_name)
     inputs = Input(shape=config['image_shape'])
     model = base_model(inputs, training=False)
     model = keras.layers.GlobalAveragePooling2D()(model)
-
     dense_layer = Dense(number_of_classes * 8, activation='relu')(model)
     dropout_lLayer = Dropout(rate=0.2)(dense_layer)
     output = Dense(number_of_classes, activation='softmax')(dropout_lLayer)
-
     model = keras.Model(inputs, output)
-
     model.compile(optimizer='adam',
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
+    return model
+
+
+for model_name in models:
+    print(f'Running model {model_name}')
+    model = create_model(model_name)
 
     early_stopping_callback = keras.callbacks.EarlyStopping(monitor='val_accuracy', patience=10)
 
-    history = model.fit(
+    model.fit(
         train_generator,
         batch_size=config['batch_size'],
         validation_data=validation_generator,
@@ -72,23 +74,6 @@ for pre_trained_model in models:
         callbacks=[early_stopping_callback, tensorboard_callback],
     )
 
-    trained_models.append(pre_trained_model)
-    plt.plot(history.history["val_accuracy"])
+    trained_models.append(model)
 
-    results['models'][pre_trained_model] = {
-        'val_accuracy': max(history.history["val_accuracy"]) * 100,
-    }
 
-results['info'] = {
-    'number_of_images': config['images_per_class'],
-    'number_of_classes': number_of_classes,
-    'start_time': start_time.strftime("%Y-%m-%d-%H-%M-%S"),
-    'end_time': datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-}
-save_results_to_file(results)
-
-plt.title('Model Accuracy')
-plt.ylabel('accuracy')
-plt.xlabel('epoch')
-plt.legend(trained_models, loc='upper left')
-plt.show()
