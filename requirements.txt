@@ -4,3 +4,5 @@ numpy
 tensorflow-datasets
 opencv-python
 matplotlib
+imgaug
+imagecorruptions

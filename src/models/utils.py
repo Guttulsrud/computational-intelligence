@@ -2,6 +2,7 @@ import tensorflow as tf
 from datetime import datetime
 import json
 import os
+import pandas as pd
 
 
 def get_base_model(name, trainable=False, weights='imagenet'):
@@ -39,3 +40,24 @@ def save_results_to_file(results):
 
     with open(f'{path}/results.json', 'w') as outfile:
         json.dump(results, outfile)
+
+
+def get_files_by_labels(labels: list) -> dict:
+    df = pd.read_csv('label_lookup.csv')
+    filtered_rows = df[df['label'].isin(labels)]
+    return filtered_rows
+
+
+def get_config_file(file_name='config.json'):
+    f = open(file_name, )
+    return json.load(f)
+
+def save_model(model, model_name, path='src/models/saved/'):
+    if path[-1] != '/':
+        path = path+'/'
+    model.save(path+model_name)
+
+def load_model(model_name, path='models/saved/'):
+    if path[-1] != '/':
+        path = path+'/'
+    return tf.keras.models.load_model(path+model_name+'/')
