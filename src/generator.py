@@ -43,7 +43,8 @@ class Generator(tf.keras.utils.Sequence):
         self.data_length = len(self.df)
         self.batch_size = config['batch_size']
         self.augmentation = augmentation
-        self.__set_agumentation()
+
+        self.__set_agumentation() if augmentation else ''
 
     def on_epoch_start(self):
         # def on_epoch_end(self):
