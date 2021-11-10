@@ -1,3 +1,4 @@
+
 from src.models.utils import get_base_model
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow import keras
@@ -6,17 +7,27 @@ from tensorflow.keras import Input
 
 def create_model(name, config):
     number_of_classes = config['number_of_classes']
+    image_shape = config['image_shape']
+    config = config['model']['keras']
+
+    dense_activation = config['dense_activation']
+    dense_regularization = config['dense_regularization']
+    dropout_rate = config['dropout_rate']
+    dense_nodes = number_of_classes * 8
 
     base_model = get_base_model(name=name)
-    inputs = Input(shape=config['image_shape'])
+    inputs = Input(shape=image_shape)
     model = base_model(inputs, training=False)
+    # Average pooling
     model = keras.layers.GlobalAveragePooling2D()(model)
-    dense_layer = Dense(number_of_classes * 8, activation='relu')(model)
-    dropout_layer = Dropout(rate=0.2)(dense_layer)
+
+    dense_layer = Dense(dense_nodes, kernel_regularizer=dense_regularization, activation=dense_activation)(model)
+    # Regularization by dropout
+    dropout_layer = Dropout(rate=dropout_rate)(dense_layer)
     output = Dense(number_of_classes, activation='softmax')(dropout_layer)
     model = keras.Model(inputs, output)
 
-    model.compile(optimizer=config['model']['keras']['optimizer'],
-                  loss=config['model']['keras']['loss'],
-                  metrics=config['model']['keras']['metrics'])
+    model.compile(optimizer=config['optimizer'],
+                  loss=config['loss'],
+                  metrics=config['metrics'])
     return model
