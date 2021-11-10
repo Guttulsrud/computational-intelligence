@@ -46,3 +46,8 @@ def get_files_by_labels(labels: list) -> dict:
     df = pd.read_csv('label_lookup.csv')
     filtered_rows = df[df['label'].isin(labels)]
     return filtered_rows
+
+
+def get_config_file(file_name='config.json'):
+    f = open(file_name, )
+    return json.load(f)

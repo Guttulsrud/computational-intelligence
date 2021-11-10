@@ -1,0 +1,31 @@
+{
+  "batch_size": 32,
+  "images_per_class": 2000,
+  "validation_split": 0.2,
+  "test_split": 0.2,
+  "labels": [
+    0,
+    1,
+    23
+  ],
+  "image_shape": [
+    150,
+    150,
+    3
+  ],
+  "model": {
+    "keras": {
+      "optimizer": "adam",
+      "loss": "categorical_crossentropy",
+      "metrics": [
+        "accuracy"
+      ]
+    },
+    "convolutional_base": [
+      "Xception",
+      "VGG16",
+      "ResNet152V2",
+      "EfficientNetB7"
+    ]
+  }
+}
