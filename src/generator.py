@@ -5,7 +5,6 @@ import tensorflow as tf
 import imgaug.augmenters as iaa
 from numpy.random import default_rng
 
-
 lookup_table = 'label_lookup.csv'
 data_path = '../images/'
 
@@ -39,7 +38,7 @@ class Generator(tf.keras.utils.Sequence):
         self.df = df
         self.data_length = len(self.df)
         self.batch_size = config['batch_size']
-        self.__set_agumentation()
+        self.__set_augmentation()
 
     def on_epoch_start(self):
         # def on_epoch_end(self):
@@ -64,7 +63,7 @@ class Generator(tf.keras.utils.Sequence):
 
         x_batch = np.asarray([self.__get_input(path) for path in path_batch])
         y_batch = np.asarray([self.__get_output(label)
-                             for label in label_batch])
+                              for label in label_batch])
 
         return x_batch, y_batch
 
@@ -97,8 +96,8 @@ class Generator(tf.keras.utils.Sequence):
     def __len__(self):
         return self.data_length // self.batch_size
 
-    def __set_agumentation(self):
-        gauss_noise = iaa.AdditiveGaussianNoise(scale=(0.01*255, 0.09*255))
+    def __set_augmentation(self):
+        gauss_noise = iaa.AdditiveGaussianNoise(scale=(0.01 * 255, 0.09 * 255))
         cutout = iaa.Cutout(nb_iterations=(5, 10), size=0.1)
         snow = iaa.imgcorruptlike.Snow(severity=(1, 2))
         gauss_blur = iaa.GaussianBlur(sigma=(5, 20))
