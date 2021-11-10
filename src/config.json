@@ -3,6 +3,7 @@
   "images_per_class": 2000,
   "validation_split": 0.2,
   "test_split": 0.2,
+  "number_of_epochs": 30,
   "labels": [
     0,
     1,

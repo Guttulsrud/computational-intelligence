@@ -14,6 +14,9 @@ config = get_config_file()
 # todo: put a mapping of me in config
 config['model']['keras']['dense_regularization'] = regularizers.l2(0.01)
 config['number_of_classes'] = len(config['labels'])
+config['model']['architecture'] = hp.HParam('architecture', hp.Discrete(['Xception', 'VGG16', 'ResNet152V2', 'EfficientNetB7']))
+config['model']['activation'] = hp.HParam('activation', hp.Discrete(['relu']))
+config['model']['dropout'] = hp.HParam('dropout', hp.Discrete([0.1, 0.2]))
 
 train_generator, validation_generator, test_generator = get_data_generators(config)
 
