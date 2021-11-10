@@ -1,7 +1,7 @@
 from tensorflow import keras
 from datetime import datetime
 from generator import get_data_generators
-from models.utils import get_config_file
+from models.utils import get_config_file, save_model
 import tensorflow as tf
 from src.models.keras import create_model
 from tensorflow.python.keras import regularizers
@@ -30,3 +30,5 @@ for model_name in config['model']['convolutional_base']:
         epochs=30,
         callbacks=[early_stopping_callback, tensorboard_callback],
     )
+
+    save_model(model, model_name)

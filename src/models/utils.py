@@ -51,3 +51,13 @@ def get_files_by_labels(labels: list) -> dict:
 def get_config_file(file_name='config.json'):
     f = open(file_name, )
     return json.load(f)
+
+def save_model(model, model_name, path='src/models/saved/'):
+    if path[-1] != '/':
+        path = path+'/'
+    model.save(path+model_name)
+
+def load_model(model_name, path='models/saved/'):
+    if path[-1] != '/':
+        path = path+'/'
+    return tf.keras.models.load_model(path+model_name+'/')
