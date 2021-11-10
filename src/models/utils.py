@@ -2,6 +2,7 @@ import tensorflow as tf
 from datetime import datetime
 import json
 import os
+import pandas as pd
 
 
 def get_base_model(name, trainable=False, weights='imagenet'):
@@ -39,3 +40,9 @@ def save_results_to_file(results):
 
     with open(f'{path}/results.json', 'w') as outfile:
         json.dump(results, outfile)
+
+
+def get_files_by_labels(labels: list) -> dict:
+    df = pd.read_csv('label_lookup.csv')
+    filtered_rows = df[df['label'].isin(labels)]
+    return filtered_rows
