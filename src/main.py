@@ -6,15 +6,24 @@ from tensorflow import keras
 from tensorflow.python.keras import regularizers
 from tensorboard.plugins.hparams import api as hp
 
-from src.generator import get_data_generators
-from src.models.keras import create_model
+from generator import get_data_generators
+from models.keras import create_model
 from models.utils import get_config_file, save_model
 
+# import os
+# os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+
+# TODO:
+# - Fairness Indicators
+# - Displaying Confusion Matrix  in TensorBoard
+# - Move Tensorboard stuff our of main
+# - Make hparam bounderies in config
+
 config = get_config_file()
-# todo: put a mapping of me in config
 config['model']['keras']['dense_regularization'] = regularizers.l2(0.01)
 config['number_of_classes'] = len(config['labels'])
-config['model']['architecture'] = hp.HParam('architecture', hp.Discrete(['Xception', 'VGG16', 'ResNet152V2', 'EfficientNetB7']))
+config['model']['architecture'] = hp.HParam('architecture',
+                                            hp.Discrete(['Xception', 'VGG16', 'ResNet152V2', 'EfficientNetB7']))
 config['model']['activation'] = hp.HParam('activation', hp.Discrete(['relu']))
 config['model']['dropout'] = hp.HParam('dropout', hp.Discrete([0.1, 0.2]))
 
@@ -39,6 +48,9 @@ for _ in range(100):
     model = create_model(name=hyper_parameters['architecture'], config=config)
 
     log_dir = "logs/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+
+    file_writer = tf.summary.create_file_writer(log_dir)
+
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
     early_stopping_callback = keras.callbacks.EarlyStopping(monitor='val_accuracy', patience=10)
     hyper_parameter_callback = hp.KerasCallback(log_dir, hyper_parameters)
@@ -48,5 +60,9 @@ for _ in range(100):
         batch_size=config['batch_size'],
         validation_data=validation_generator,
         epochs=config['number_of_epochs'],
-        callbacks=[early_stopping_callback, tensorboard_callback, hyper_parameter_callback],
+        callbacks=[
+            early_stopping_callback,
+            tensorboard_callback,
+            hyper_parameter_callback
+        ],
     )
