@@ -14,7 +14,7 @@ data_path = '../images/'
 def get_data_generators(config: dict):
     assert config['images_per_class'] <= 2023
 
-    df = get_data_from_labels(config['labels'], config['images_per_class'])
+    df = get_data_from_labels(config['classes'], config['images_per_class'])
 
     df['file_name'] = data_path + df['file_name']
 
@@ -63,8 +63,8 @@ class Generator(tf.keras.utils.Sequence):
         return image / 255.
 
     def __get_output(self, label):
-        one_hot_label = np.zeros(len(self.config['labels']))
-        one_hot_label[self.config['labels'].index(label)] = 1
+        one_hot_label = np.zeros(len(self.config['classes']))
+        one_hot_label[self.config['classes'].index(label)] = 1
         return one_hot_label
 
     def __get_data(self, batches):

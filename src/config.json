@@ -4,10 +4,10 @@
   "validation_split": 0.2,
   "test_split": 0.2,
   "number_of_epochs": 30,
-  "labels": [
+  "classes": [
     0,
     1,
-    23
+    2
   ],
   "image_shape": [
     150,
