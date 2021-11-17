@@ -1,6 +1,6 @@
 {
   "batch_size": 32,
-  "images_per_class": 2000,
+  "images_per_class": 100,
   "validation_split": 0.2,
   "test_split": 0.2,
   "number_of_epochs": 30,
@@ -15,15 +15,18 @@
     3
   ],
   "model": {
-    "keras": {
-      "optimizer": "adam",
-      "loss": "categorical_crossentropy",
-      "metrics": [
-        "accuracy"
-      ],
-      "dense_activation": "relu",
-      "dropout_rate": 0.2
-    },
+    "optimizer": [
+      "adam"
+    ],
+    "loss": [
+      "categorical_crossentropy"
+    ],
+    "metrics": [
+      "accuracy"
+    ],
+    "dense_activation": ["relu"],
+    "dropout_rate": [0.2],
+    "dense_regularization": [0.01],
     "convolutional_base": [
       "Xception",
       "VGG16",
