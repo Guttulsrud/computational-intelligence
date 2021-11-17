@@ -8,6 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
+
 class TestingCallback(keras.callbacks.Callback):
     def __init__(self, test_gen, config, log_dir):
         self.test_gen = test_gen
@@ -45,6 +46,14 @@ class TestingCallback(keras.callbacks.Callback):
 
             metrics_image = plot_to_image(fig)
 
+            # with tf.Session() as sess:
+            #     # Run
+            #     summary = sess.run(metrics_image)
+            #     # Write summary
+            #     writer = tf.train.SummaryWriter(f'{self.log_dir}/{metric}')
+            #     writer.add_summary(summary)
+            #     writer.close()
+
             file_writer = tf.summary.create_file_writer(f'{self.log_dir}/{metric}')
             with file_writer.as_default():
                 tf.summary.image(metric, metrics_image, step=epoch)
@@ -53,6 +62,13 @@ class TestingCallback(keras.callbacks.Callback):
         cm = confusion_matrix(test_labels, test_pred)
         figure = plot_confusion_matrix(cm, class_names=self.config["classes"])
         cm_image = plot_to_image(figure)
+
+        # with tf.compat.v1.Session() as sess:
+        #     summary = sess.run(cm_image)
+        #     writer = tf.train.SummaryWriter(f'{self.log_dir}/cm')
+        #     writer.add_summary(summary)
+        #     writer.close()
+
         file_writer_cm = tf.summary.create_file_writer(self.log_dir + '/cm')
         with file_writer_cm.as_default():
             tf.summary.image("Confusion Matrix", cm_image, step=epoch)
@@ -88,4 +104,5 @@ def plot_to_image(figure):
 
     image = tf.image.decode_png(buf.getvalue(), channels=4)
     image = tf.expand_dims(image, 0)
+    # summary_op = tf.summary.image("plot", image)
     return image
