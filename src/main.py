@@ -1,7 +1,7 @@
 from generator import get_data_generators
 from models.model import create_model
 from models.utils import get_config_file
-from src.controller import Controller, init_callbacks
+from src.Controller import Controller, init_callbacks
 
 config = get_config_file()
 config['number_of_classes'] = len(config['classes'])
