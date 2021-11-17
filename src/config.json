@@ -27,6 +27,7 @@
     "dense_activation": ["relu"],
     "dropout_rate": [0.2],
     "dense_regularization": [0.01],
+    "layers": [1, 2, 3, 4],
     "convolutional_base": [
       "Xception",
       "VGG16",

@@ -4,7 +4,7 @@ import tensorflow as tf
 from tensorflow import keras
 from datetime import datetime
 
-from src.ConfusionMatrixCallback import ConfusionMatrixCallback
+from src.TestingCallback import TestingCallback
 
 
 class Controller:
@@ -25,6 +25,6 @@ def init_callbacks(test_generator, config, hyper_parameters):
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
     early_stopping_callback = keras.callbacks.EarlyStopping(monitor='val_accuracy', patience=10)
     hyper_parameter_callback = hp.KerasCallback(log_dir, hyper_parameters)
-    confusion_matrix_callback = ConfusionMatrixCallback(test_generator, config, log_dir)
+    testing_callbacks = TestingCallback(test_generator, config, log_dir)
 
-    return [tensorboard_callback, early_stopping_callback, hyper_parameter_callback, confusion_matrix_callback]
+    return [tensorboard_callback, early_stopping_callback, hyper_parameter_callback, testing_callbacks]
