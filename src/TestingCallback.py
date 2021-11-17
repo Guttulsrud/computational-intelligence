@@ -27,7 +27,6 @@ class TestingCallback(keras.callbacks.Callback):
     def save_metrics(self, epoch, test_labels, test_pred):
         data = classification_report(test_labels, test_pred, output_dict=True)
         del data['accuracy']
-        df = pd.DataFrame(data).transpose().reset_index()
 
         mpl.style.use('seaborn')
 
@@ -36,6 +35,7 @@ class TestingCallback(keras.callbacks.Callback):
             fig = plt.figure()
             ax = fig.add_axes([0, 0, 1, 1])
             ax.bar(df['index'], df[metric])
+            ax.set_xticklabels(metric)
 
             plt.ylim(0, 1)
             plt.xticks(rotation=30)

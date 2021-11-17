@@ -10,10 +10,11 @@ train_generator, validation_generator, test_generator = get_data_generators(conf
 
 c = Controller(config, test_generator)
 
-for _ in range(100):
+for count in range(100):
     hyper_parameters = c.get_random_hyper_parameters()
-    print(f'Running model {hyper_parameters}')
-    model = create_model(name=hyper_parameters['convolutional_base'], config=config, hyper_parameters=hyper_parameters)
+    print(f'Running model number {count} \n'
+          f'with hyper parameters: {hyper_parameters}')
+    model = create_model(config=config, hyper_parameters=hyper_parameters)
 
     callbacks = init_callbacks(test_generator, config, hyper_parameters)
 

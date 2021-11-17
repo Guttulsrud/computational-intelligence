@@ -15,7 +15,11 @@ class Controller:
         self.hyper_parameters = {key: hp.HParam(key, hp.Discrete(value)) for key, value in config['model'].items()}
 
     def get_random_hyper_parameters(self) -> dict:
-        hyper_parameters = {key: random.choice(value.domain.values) for key, value in self.hyper_parameters.items()}
+        hyper_parameters = {}
+        for key, value in self.hyper_parameters.items():
+            decided_value = random.choice(value.domain.values)
+
+            hyper_parameters[key] = decided_value
         return hyper_parameters
 
 
