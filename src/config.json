@@ -4,10 +4,10 @@
   "validation_split": 0.2,
   "test_split": 0.2,
   "number_of_epochs": 30,
-  "labels": [
+  "classes": [
     0,
     1,
-    23
+    2
   ],
   "image_shape": [
     150,
@@ -15,15 +15,42 @@
     3
   ],
   "model": {
-    "keras": {
-      "optimizer": "adam",
-      "loss": "categorical_crossentropy",
-      "metrics": [
-        "accuracy"
-      ],
-      "dense_activation": "relu",
-      "dropout_rate": 0.2
-    },
+    "optimizer": [
+      "adam"
+    ],
+    "loss": [
+      "categorical_crossentropy"
+    ],
+    "metrics": [
+      "accuracy"
+    ],
+    "dense_activation": [
+      "relu",
+      "swish"
+    ],
+    "dropout_rate": [
+      0.0,
+      0.1,
+      0.2,
+      0.3,
+      0.4,
+      0.5
+    ],
+    "dense_regularization": [
+      0.01,
+      0.02
+    ],
+    "nodes_in_layer": [
+      4,
+      8,
+      16,
+      32,
+      64,
+      128,
+      256,
+      512,
+      1024
+    ],
     "convolutional_base": [
       "Xception",
       "VGG16",

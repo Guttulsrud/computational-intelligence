@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import pandas as pd
 import numpy as np
 import cv2
@@ -12,7 +14,7 @@ data_path = '../images/'
 def get_data_generators(config: dict):
     assert config['images_per_class'] <= 2023
 
-    df = get_data_from_labels(config['labels'], config['images_per_class'])
+    df = get_data_from_labels(config['classes'], config['images_per_class'])
 
     df['file_name'] = data_path + df['file_name']
 
@@ -42,6 +44,9 @@ class Generator(tf.keras.utils.Sequence):
         self.data_length = len(self.df)
         self.batch_size = config['batch_size']
         self.augmentation = augmentation
+        self.log_dir = "logs/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+        self.input_shape = (150, 150)
+
 
         if augmentation: self.__set_augmentation()
 
@@ -58,8 +63,8 @@ class Generator(tf.keras.utils.Sequence):
         return image / 255.
 
     def __get_output(self, label):
-        one_hot_label = np.zeros(len(self.config['labels']))
-        one_hot_label[self.config['labels'].index(label)] = 1
+        one_hot_label = np.zeros(len(self.config['classes']))
+        one_hot_label[self.config['classes'].index(label)] = 1
         return one_hot_label
 
     def __get_data(self, batches):
@@ -68,7 +73,13 @@ class Generator(tf.keras.utils.Sequence):
 
         x_batch = np.asarray([self.__get_input(path) for path in path_batch])
         y_batch = np.asarray([self.__get_output(label)
-                             for label in label_batch])
+                              for label in label_batch])
+
+        # saves first image per batch in tensorboard
+        file_writer = tf.summary.create_file_writer(self.log_dir)
+        img = np.reshape(x_batch[0], (-1, self.input_shape[0], self.input_shape[1], 3))
+        with file_writer.as_default():
+            tf.summary.image('image_title', img, step=0)
 
         return x_batch, y_batch
 
@@ -79,7 +90,7 @@ class Generator(tf.keras.utils.Sequence):
         return x, y
 
     def __augment_image(self, image, n_filters=-1):
-        image = cv2.resize(image, (150, 150), interpolation=cv2.INTER_AREA)
+        image = cv2.resize(image, self.input_shape, interpolation=cv2.INTER_AREA)
 
         if self.augmentation:
 
@@ -104,7 +115,7 @@ class Generator(tf.keras.utils.Sequence):
         return self.data_length // self.batch_size
 
     def __set_augmentation(self):
-        gaussian_noise = iaa.AdditiveGaussianNoise(scale=(0.01*255, 0.09*255))
+        gaussian_noise = iaa.AdditiveGaussianNoise(scale=(0.01 * 255, 0.09 * 255))
         cutout = iaa.Cutout(nb_iterations=(5, 10), size=0.1)
         snow = iaa.imgcorruptlike.Snow(severity=(1, 2))
         gaussian_blur = iaa.GaussianBlur(sigma=(5, 20))
