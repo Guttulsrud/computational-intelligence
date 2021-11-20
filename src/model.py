@@ -32,5 +32,5 @@ def create_model(config, hyper_parameters):
 
     model.compile(optimizer=hyper_parameters['optimizer'],
                   loss=hyper_parameters['loss'],
-                  metrics=hyper_parameters['metrics'])
+                  metrics=config['metrics'])
     return model

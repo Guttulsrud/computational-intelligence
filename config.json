@@ -1,13 +1,19 @@
 {
   "batch_size": 32,
-  "images_per_class": 2000,
+  "images_per_class": 100,
   "validation_split": 0.2,
   "test_split": 0.2,
-  "number_of_epochs": 30,
+  "number_of_epochs": 100,
+  "patience": 10,
   "classes": [
-    0,
-    1,
-    2
+    7,
+    14,
+    25,
+    35,
+    41
+  ],
+  "metrics": [
+    "accuracy"
   ],
   "image_shape": [
     150,
@@ -21,29 +27,16 @@
     "loss": [
       "categorical_crossentropy"
     ],
-    "metrics": [
-      "accuracy"
-    ],
     "dense_activation": [
-      "relu",
-      "swish"
+      "relu"
     ],
     "dropout_rate": [
-      0.0,
-      0.1,
-      0.2,
-      0.3,
-      0.4,
-      0.5
+      0.2
     ],
     "dense_regularization": [
-      0.01,
-      0.02
+      0.01
     ],
     "nodes_in_layer": [
-      4,
-      8,
-      16,
       32,
       64,
       128,

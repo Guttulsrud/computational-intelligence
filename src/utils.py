@@ -86,7 +86,7 @@ def init_callbacks(test_generator, config, hyper_parameters):
     log_dir = f'logs/{datetime.now().strftime("%Y%m%d-%H%M%S")}'
 
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-    early_stopping_callback = keras.callbacks.EarlyStopping(monitor='val_accuracy', patience=10)
+    early_stopping_callback = keras.callbacks.EarlyStopping(monitor='val_accuracy', patience=config['patience'])
     hyper_parameter_callback = hp.KerasCallback(log_dir, hyper_parameters)
     testing_callbacks = TestingCallback(test_generator, config, log_dir)
 

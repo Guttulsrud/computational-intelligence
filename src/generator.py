@@ -47,7 +47,6 @@ class Generator(tf.keras.utils.Sequence):
         self.log_dir = "logs/" + datetime.now().strftime("%Y%m%d-%H%M%S")
         self.input_shape = (150, 150)
 
-
         if augmentation: self.__set_augmentation()
 
     def on_epoch_start(self):
@@ -76,10 +75,12 @@ class Generator(tf.keras.utils.Sequence):
                               for label in label_batch])
 
         # saves first image per batch in tensorboard
+
         file_writer = tf.summary.create_file_writer(self.log_dir)
-        img = np.reshape(x_batch[0], (-1, self.input_shape[0], self.input_shape[1], 3))
+        imgs = np.reshape(x_batch, (-1, self.input_shape[0], self.input_shape[1], 3))
+
         with file_writer.as_default():
-            tf.summary.image('image_title', img, step=0)
+            tf.summary.image(f'Images', imgs, max_outputs=20, step=0)
 
         return x_batch, y_batch
 
@@ -115,13 +116,14 @@ class Generator(tf.keras.utils.Sequence):
         return self.data_length // self.batch_size
 
     def __set_augmentation(self):
-        gaussian_noise = iaa.AdditiveGaussianNoise(scale=(0.01 * 255, 0.09 * 255))
-        cutout = iaa.Cutout(nb_iterations=(5, 10), size=0.1)
-        snow = iaa.imgcorruptlike.Snow(severity=(1, 2))
-        gaussian_blur = iaa.GaussianBlur(sigma=(5, 20))
-        brightness = iaa.MultiplyBrightness((0.5, 3))
-        dropout = iaa.CoarseDropout((0.05, 0.10), size_percent=0.1)
-        crop = iaa.Crop(px=(10, 50), sample_independently=True)
+        # crop = iaa.Crop(px=(10, 50), sample_independently=True)
 
-        self.augmenters = [gaussian_blur, gaussian_noise,
-                           cutout, dropout, crop, snow, brightness]
+        gaussian_noise = iaa.AdditiveGaussianNoise(scale=(0.01 * 255, 0.03 * 255))
+        gaussian_blur = iaa.GaussianBlur(sigma=(1, 2))
+
+        snow = iaa.Snowflakes(flake_size=(0.1, 0.3), speed=(0.01, 0.10))
+
+        cutout = iaa.Cutout(nb_iterations=(5, 10), size=0.1)
+        dropout = iaa.CoarseDropout((0.05, 0.10), size_percent=0.1)
+
+        self.augmenters = [gaussian_noise, gaussian_blur, snow, cutout, dropout]
