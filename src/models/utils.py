@@ -61,3 +61,13 @@ def load_model(model_name, path='models/saved/'):
     if path[-1] != '/':
         path = path+'/'
     return tf.keras.models.load_model(path+model_name+'/')
+
+def save_weights(model, model_name, path='src/models/saved/'):
+    if path[-1] != '/':
+        path = path+'/'
+    model.save_weights(path+model_name)
+
+def load_weights(model, model_name, path='models/saved/'):
+    if path[-1] != '/':
+        path = path+'/'
+    return model.load_weights(path+model_name, by_name=True)

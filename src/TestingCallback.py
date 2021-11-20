@@ -8,6 +8,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
+
 class TestingCallback(keras.callbacks.Callback):
     def __init__(self, test_gen, config, log_dir):
         self.test_gen = test_gen
@@ -27,15 +28,13 @@ class TestingCallback(keras.callbacks.Callback):
     def save_metrics(self, epoch, test_labels, test_pred):
         data = classification_report(test_labels, test_pred, output_dict=True)
         del data['accuracy']
-        df = pd.DataFrame(data).transpose().reset_index()
 
         mpl.style.use('seaborn')
 
         df = pd.DataFrame(data).transpose().reset_index()
         for metric in ['precision', 'recall', 'f1-score']:
             fig = plt.figure()
-            ax = fig.add_axes([0, 0, 1, 1])
-            ax.bar(df['index'], df[metric])
+            plt.bar(df['index'], df[metric])
 
             plt.ylim(0, 1)
             plt.xticks(rotation=30)
@@ -53,6 +52,7 @@ class TestingCallback(keras.callbacks.Callback):
         cm = confusion_matrix(test_labels, test_pred)
         figure = plot_confusion_matrix(cm, class_names=self.config["classes"])
         cm_image = plot_to_image(figure)
+
         file_writer_cm = tf.summary.create_file_writer(self.log_dir + '/cm')
         with file_writer_cm.as_default():
             tf.summary.image("Confusion Matrix", cm_image, step=epoch)
