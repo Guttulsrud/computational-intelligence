@@ -1,5 +1,5 @@
 
-from src.models.utils import get_base_model
+from src.utils import get_base_model
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow import keras
 from tensorflow.keras import Input

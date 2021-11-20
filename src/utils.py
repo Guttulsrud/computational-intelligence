@@ -4,6 +4,11 @@ import json
 import os
 import pandas as pd
 
+from tensorboard.plugins.hparams import api as hp
+from tensorflow import keras
+
+from src.classes.TestingCallback import TestingCallback
+
 
 def get_base_model(name, trainable=False, weights='imagenet'):
     pre_trained_models = {
@@ -48,26 +53,41 @@ def get_files_by_labels(labels: list) -> dict:
     return filtered_rows
 
 
-def get_config_file(file_name='config.json'):
+def get_config_file(file_name='../config.json'):
     f = open(file_name, )
     return json.load(f)
 
+
 def save_model(model, model_name, path='src/models/saved/'):
     if path[-1] != '/':
-        path = path+'/'
-    model.save(path+model_name)
+        path = path + '/'
+    model.save(path + model_name)
+
 
 def load_model(model_name, path='models/saved/'):
     if path[-1] != '/':
-        path = path+'/'
-    return tf.keras.models.load_model(path+model_name+'/')
+        path = path + '/'
+    return tf.keras.models.load_model(path + model_name + '/')
+
 
 def save_weights(model, model_name, path='src/models/saved/'):
     if path[-1] != '/':
-        path = path+'/'
-    model.save_weights(path+model_name)
+        path = path + '/'
+    model.save_weights(path + model_name)
+
 
 def load_weights(model, model_name, path='models/saved/'):
     if path[-1] != '/':
-        path = path+'/'
-    return model.load_weights(path+model_name, by_name=True)
+        path = path + '/'
+    return model.load_weights(path + model_name, by_name=True)
+
+
+def init_callbacks(test_generator, config, hyper_parameters):
+    log_dir = f'logs/{datetime.now().strftime("%Y%m%d-%H%M%S")}'
+
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+    early_stopping_callback = keras.callbacks.EarlyStopping(monitor='val_accuracy', patience=10)
+    hyper_parameter_callback = hp.KerasCallback(log_dir, hyper_parameters)
+    testing_callbacks = TestingCallback(test_generator, config, log_dir)
+
+    return [tensorboard_callback, early_stopping_callback, hyper_parameter_callback, testing_callbacks]

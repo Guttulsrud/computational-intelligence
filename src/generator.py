@@ -7,8 +7,8 @@ import tensorflow as tf
 import imgaug.augmenters as iaa
 from numpy.random import default_rng
 
-lookup_table = 'label_lookup.csv'
-data_path = '../images/'
+lookup_table = '../data/label_lookup.csv'
+data_path = '../data/images/'
 
 
 def get_data_generators(config: dict):

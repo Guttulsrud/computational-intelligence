@@ -34,4 +34,5 @@ def download_data():
     df.to_csv('label_lookup.csv', index=False)
 
 
-download_data()
+if __name__ == '__main__':
+    download_data()

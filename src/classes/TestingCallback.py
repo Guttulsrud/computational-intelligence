@@ -1,12 +1,12 @@
-import io
-import itertools
 from sklearn.metrics import confusion_matrix, classification_report
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 import pandas as pd
-import matplotlib.pyplot as plt
 import matplotlib as mpl
+import io
+import itertools
+from matplotlib import pyplot as plt
 
 
 class TestingCallback(keras.callbacks.Callback):
@@ -42,7 +42,7 @@ class TestingCallback(keras.callbacks.Callback):
             plt.xlabel('class')
             plt.title(metric)
 
-            metrics_image = plot_to_image(fig)
+            metrics_image = self.plot_to_image(fig)
 
             file_writer = tf.summary.create_file_writer(f'{self.log_dir}/{metric}')
             with file_writer.as_default():
@@ -50,42 +50,42 @@ class TestingCallback(keras.callbacks.Callback):
 
     def save_confusion_matrix(self, epoch, test_labels, test_pred):
         cm = confusion_matrix(test_labels, test_pred)
-        figure = plot_confusion_matrix(cm, class_names=self.config["classes"])
-        cm_image = plot_to_image(figure)
+        figure = self.plot_confusion_matrix(cm, class_names=self.config["classes"])
+        cm_image = self.plot_to_image(figure)
 
         file_writer_cm = tf.summary.create_file_writer(self.log_dir + '/cm')
         with file_writer_cm.as_default():
             tf.summary.image("Confusion Matrix", cm_image, step=epoch)
 
+    @staticmethod
+    def plot_confusion_matrix(cm, class_names):
+        figure = plt.figure(figsize=(8, 8))
+        plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+        plt.title("Confusion matrix")
+        plt.colorbar()
+        tick_marks = np.arange(len(class_names))
+        plt.xticks(tick_marks, class_names, rotation=45)
+        plt.yticks(tick_marks, class_names)
 
-def plot_confusion_matrix(cm, class_names):
-    figure = plt.figure(figsize=(8, 8))
-    plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
-    plt.title("Confusion matrix")
-    plt.colorbar()
-    tick_marks = np.arange(len(class_names))
-    plt.xticks(tick_marks, class_names, rotation=45)
-    plt.yticks(tick_marks, class_names)
+        labels = np.around(cm.astype('float') / cm.sum(axis=1)[:, np.newaxis], decimals=2)
 
-    labels = np.around(cm.astype('float') / cm.sum(axis=1)[:, np.newaxis], decimals=2)
+        threshold = cm.max() / 2.
+        for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+            color = "white" if cm[i, j] > threshold else "black"
+            plt.text(j, i, labels[i, j], horizontalalignment="center", color=color)
 
-    threshold = cm.max() / 2.
-    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-        color = "white" if cm[i, j] > threshold else "black"
-        plt.text(j, i, labels[i, j], horizontalalignment="center", color=color)
+        plt.tight_layout()
+        plt.ylabel('True label')
+        plt.xlabel('Predicted label')
+        return figure
 
-    plt.tight_layout()
-    plt.ylabel('True label')
-    plt.xlabel('Predicted label')
-    return figure
+    @staticmethod
+    def plot_to_image(figure):
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        plt.close(figure)
+        buf.seek(0)
 
-
-def plot_to_image(figure):
-    buf = io.BytesIO()
-    plt.savefig(buf, format='png')
-    plt.close(figure)
-    buf.seek(0)
-
-    image = tf.image.decode_png(buf.getvalue(), channels=4)
-    image = tf.expand_dims(image, 0)
-    return image
+        image = tf.image.decode_png(buf.getvalue(), channels=4)
+        image = tf.expand_dims(image, 0)
+        return image
