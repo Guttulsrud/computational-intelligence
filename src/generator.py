@@ -50,7 +50,6 @@ class Generator(tf.keras.utils.Sequence):
         if augmentation: self.__set_augmentation()
 
     def on_epoch_start(self):
-        # def on_epoch_end(self):
         if self.shuffle:
             self.df = self.df.sample(frac=1).reset_index(drop=True)
 
@@ -77,7 +76,7 @@ class Generator(tf.keras.utils.Sequence):
         # saves first image per batch in tensorboard
 
         file_writer = tf.summary.create_file_writer(self.log_dir)
-        imgs = np.reshape(x_batch, (-1, self.input_shape[0], self.input_shape[1], 3))
+        imgs = np.reshape(x_batch[0], (-1, self.input_shape[0], self.input_shape[1], 3))
 
         with file_writer.as_default():
             tf.summary.image(f'Images', imgs, max_outputs=20, step=0)
