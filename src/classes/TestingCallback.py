@@ -22,12 +22,6 @@ class TestingCallback(keras.callbacks.Callback):
         test_labels_raw = [list(label) for data in self.test_gen for label in data[1]]
         test_labels = np.argmax(test_labels_raw, axis=1)
 
-        # print(test_pred_raw)
-        # print(test_labels_raw)
-        # print(test_pred)
-        # print(test_labels)
-        # exit()
-
         self.save_confusion_matrix(epoch, test_labels, test_pred)
         self.save_metrics(epoch, test_labels, test_pred)
 
@@ -55,7 +49,7 @@ class TestingCallback(keras.callbacks.Callback):
                 tf.summary.image(metric, metrics_image, step=epoch)
 
     def save_confusion_matrix(self, epoch, test_labels, test_pred):
-        cm = confusion_matrix(y_true=test_labels, y_pred=test_pred)
+        cm = confusion_matrix(test_labels, test_pred)
         figure = self.plot_confusion_matrix(cm, class_names=self.config["classes"])
         cm_image = self.plot_to_image(figure)
 

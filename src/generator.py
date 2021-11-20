@@ -47,6 +47,7 @@ class Generator(tf.keras.utils.Sequence):
         self.log_dir = "logs/images"
         self.input_shape = (150, 150)
 
+
         if augmentation: self.__set_augmentation()
 
     def on_epoch_start(self):
@@ -74,12 +75,11 @@ class Generator(tf.keras.utils.Sequence):
                               for label in label_batch])
 
         # saves first image per batch in tensorboard
-
         file_writer = tf.summary.create_file_writer(self.log_dir)
-        imgs = np.reshape(x_batch[0], (-1, self.input_shape[0], self.input_shape[1], 3))
+        imgs = np.reshape(x_batch, (-1, self.input_shape[0], self.input_shape[1], 3))
 
         with file_writer.as_default():
-            tf.summary.image(f'Images', imgs, max_outputs=20, step=0)
+            tf.summary.image(f'Images', imgs, max_outputs=1, step=0)
 
         return x_batch, y_batch
 
