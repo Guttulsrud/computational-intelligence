@@ -27,6 +27,6 @@ def create_model(config, hyper_parameters):
     model.add(Dense(number_of_classes, activation='softmax'))
 
     model.compile(optimizer=hyper_parameters['optimizer'],
-                  loss=hyper_parameters['loss'],
-                  metrics=config['metrics'])
+                  loss=hyper_parameters['loss_function'],
+                  metrics=config['metric'])
     return model

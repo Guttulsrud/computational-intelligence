@@ -12,9 +12,8 @@
     35,
     41
   ],
-  "metrics": [
-    "accuracy"
-  ],
+  "metric": "accuracy"
+  ,
   "image_shape": [
     150,
     150,
@@ -24,7 +23,7 @@
     "optimizer": [
       "adam"
     ],
-    "loss": [
+    "loss_function": [
       "categorical_crossentropy"
     ],
     "dense_activation": [

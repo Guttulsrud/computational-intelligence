@@ -44,7 +44,7 @@ class Generator(tf.keras.utils.Sequence):
         self.data_length = len(self.df)
         self.batch_size = config['batch_size']
         self.augmentation = augmentation
-        self.log_dir = "logs/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+        self.log_dir = "logs/images"
         self.input_shape = (150, 150)
 
         if augmentation: self.__set_augmentation()

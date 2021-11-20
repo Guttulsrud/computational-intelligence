@@ -59,7 +59,7 @@ class TestingCallback(keras.callbacks.Callback):
         figure = self.plot_confusion_matrix(cm, class_names=self.config["classes"])
         cm_image = self.plot_to_image(figure)
 
-        file_writer_cm = tf.summary.create_file_writer(self.log_dir + '/cm')
+        file_writer_cm = tf.summary.create_file_writer(f'{self.log_dir}/confusion_matrix')
         with file_writer_cm.as_default():
             tf.summary.image("Confusion Matrix", cm_image, step=epoch)
 

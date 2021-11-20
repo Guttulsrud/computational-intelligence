@@ -82,12 +82,11 @@ def load_weights(model, model_name, path='models/saved/'):
     return model.load_weights(path + model_name, by_name=True)
 
 
-def init_callbacks(test_generator, config, hyper_parameters):
-    log_dir = f'logs/{datetime.now().strftime("%Y%m%d-%H%M%S")}'
+def init_callbacks(test_generator, config, hyper_parameters, log_dir):
 
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=f'{log_dir}/general', histogram_freq=1)
     early_stopping_callback = keras.callbacks.EarlyStopping(monitor='val_accuracy', patience=config['patience'])
-    hyper_parameter_callback = hp.KerasCallback(log_dir, hyper_parameters)
+    # hyper_parameter_callback = hp.KerasCallback(f'{log_dir}/hparam_tuning', hyper_parameters)
     testing_callbacks = TestingCallback(test_generator, config, log_dir)
 
-    return [tensorboard_callback, early_stopping_callback, hyper_parameter_callback, testing_callbacks]
+    return [tensorboard_callback, early_stopping_callback, testing_callbacks]
