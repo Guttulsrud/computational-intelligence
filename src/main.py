@@ -22,13 +22,16 @@ for count in range(100):
     run_dir = f'{datetime.now().strftime("%Y%m%d-%H%M%S")}'
     callbacks = init_callbacks(test_generator, config, hyper_parameters, f'logs/{datetime.now().strftime("%Y%m%d-%H%M%S")}')
 
-    model.fit(
-        train_generator,
-        batch_size=config['batch_size'],
-        validation_data=validation_generator,
-        epochs=config['number_of_epochs'],
-        callbacks=callbacks
-    )
-    _, accuracy = model.evaluate(test_generator)
+    try:
+        model.fit(
+            train_generator,
+            batch_size=config['batch_size'],
+            validation_data=validation_generator,
+            epochs=config['number_of_epochs'],
+            callbacks=callbacks
+        )
+        _, accuracy = model.evaluate(test_generator)
 
-    controller.update_hparams(run_dir, hyper_parameters, accuracy)
+        controller.update_hparams(run_dir, hyper_parameters, accuracy)
+    except:
+        pass
