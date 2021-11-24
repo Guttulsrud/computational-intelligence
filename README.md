@@ -24,7 +24,7 @@ To extract the pickle run:
 ```bash
 python src/download_data.py
 ```
-In order to run the project:
+## Run the project:
 ```bash
 python src/main.py
 ```
