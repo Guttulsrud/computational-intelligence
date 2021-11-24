@@ -24,6 +24,8 @@ To extract the pickle run:
 ```bash
 python src/download_data.py
 ```
+> :warning: **Python version**: You may need to use python3 / python3.x depending on your installation
+
 ## Run the project:
 ```bash
 python src/main.py
