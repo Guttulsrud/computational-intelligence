@@ -1,8 +1,8 @@
 from generator import get_data_generators
-from src.model import create_model
-from src.utils import get_config_file
-from src.classes.Controller import Controller
-from src.utils import init_callbacks
+from model import create_model
+from utils import get_config_file
+from classes.Controller import Controller
+from utils import init_callbacks
 import tensorflow as tf
 from datetime import datetime
 

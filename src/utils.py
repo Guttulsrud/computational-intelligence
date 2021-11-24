@@ -7,7 +7,7 @@ import pandas as pd
 from tensorboard.plugins.hparams import api as hp
 from tensorflow import keras
 
-from src.classes.TestingCallback import TestingCallback
+from classes.TestingCallback import TestingCallback
 
 
 def get_base_model(name, trainable=False, weights='imagenet'):
@@ -53,7 +53,7 @@ def get_files_by_labels(labels: list) -> dict:
     return filtered_rows
 
 
-def get_config_file(file_name='../config.json'):
+def get_config_file(file_name='config.json'):
     f = open(file_name, )
     return json.load(f)
 
