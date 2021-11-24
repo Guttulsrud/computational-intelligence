@@ -2,10 +2,34 @@
 ACIT 4620 
 ----------
 
-Tensorboard:
-> cd src
+## Traffic sign classification using a Deep Convolutional Neural Network in Python
 
-> tensorboard --logdir logs
+Changing directory to the project folder:
+```bash
+ cd src
+```
+
+In order to install all dependencies, all of them can be found in requirements.txt:
+```bash
+python -m pip install -r requirements.txt
+```
+
+> :warning: **If you are using an environment**: Be sure to install all dependencies in the desired environment!
+> :warning: **Python version**: You may need to use python3 / python3.x depending on your installation
+
+In order to run the project:
+```bash
+python main.py
+```
+
+> :warning: **Python version**: You may need to use python3 / python3.x depending on your installation
+
+Tensorboard:
+```bash
+tensorboard --logdir logs
+```
+
+> :heavy_check_mark: **Tensorflow GPU utilization**: If you want to enable GPU training, make sure to follow this [guide](https://www.tensorflow.org/install/gpu) step by step
 
 Classes:
 
