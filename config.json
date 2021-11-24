@@ -1,9 +1,9 @@
 {
-  "batch_size": 128,
+  "batch_size": 256,
   "images_per_class": 2000,
   "validation_split": 0.2,
   "test_split": 0.2,
-  "number_of_epochs": 100,
+  "number_of_epochs": 30,
   "patience": 10,
   "classes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42],
   "metric": "accuracy"
