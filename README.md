@@ -4,10 +4,6 @@ ACIT 4620
 
 ## Traffic sign classification using Deep Convolutional Neural Networks in Python
 
-Changing directory to the project folder:
-```bash
- cd src
-```
 
 In order to install all dependencies, which can be found in requirements.txt:
 ```bash
@@ -20,7 +16,7 @@ python -m pip install -r requirements.txt
 
 In order to run the project:
 ```bash
-python main.py
+python src/main.py
 ```
 > :warning: **Python version**: You may need to use python3 / python3.x depending on your installation
 
