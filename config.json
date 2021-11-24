@@ -5,15 +5,8 @@
   "test_split": 0.2,
   "number_of_epochs": 100,
   "patience": 10,
-  "classes": [
-    7,
-    14,
-    25,
-    35,
-    41
-  ],
-  "metric": "accuracy"
-  ,
+  "classes": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42],
+  "metric": "accuracy",
   "image_shape": [
     150,
     150,
@@ -21,36 +14,22 @@
   ],
   "model": {
     "optimizer": [
-      "adam"
+      "adam",
+      "adamax",
+      "sgd"
     ],
     "loss_function": [
       "categorical_crossentropy"
     ],
-    "dense_activation": [
-      "relu"
-    ],
-    "dropout_rate": [
-      0.2
-    ],
-    "dense_regularization": [
-      0.01
-    ],
-    "number_of_layers": [
-      0, 1, 2
-    ],
-    "nodes_in_layer": [
-      32,
-      64,
-      128,
-      256,
-      512,
-      1024
-    ],
+    "dense_activation": ["linear"],
+    "dropout_rate": [0],
+    "dense_regularization": [0.0],
+    "number_of_layers": [0],
+    "nodes_in_layer": [0],
+    "pooling": ["average", "max"],
     "convolutional_base": [
       "Xception",
-      "VGG16",
-      "ResNet152V2",
-      "EfficientNetB7"
+      "ResNet152V2"
     ]
   }
 }
