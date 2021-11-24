@@ -59,7 +59,7 @@ class TestingCallback(keras.callbacks.Callback):
 
     @staticmethod
     def plot_confusion_matrix(cm, class_names):
-        figure = plt.figure(figsize=(8, 8))
+        figure = plt.figure(figsize=(40, 40))
         plt.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
         plt.title("Confusion matrix")
         plt.colorbar()
@@ -67,12 +67,13 @@ class TestingCallback(keras.callbacks.Callback):
         plt.xticks(tick_marks, class_names, rotation=45)
         plt.yticks(tick_marks, class_names)
 
-        labels = np.around(cm.astype('float') / cm.sum(axis=1)[:, np.newaxis], decimals=2)
+        # labels = np.around(cm.astype('float') / cm.sum(axis=1)[:, np.newaxis], decimals=2)
 
         threshold = cm.max() / 2.
         for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
             color = "white" if cm[i, j] > threshold else "black"
-            plt.text(j, i, labels[i, j], horizontalalignment="center", color=color)
+            plt.text(j, i, " ", horizontalalignment="center", color=color)
+            # plt.text(j, i, labels[i, j], horizontalalignment="center", color=color)
 
         plt.tight_layout()
         plt.ylabel('True label')
