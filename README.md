@@ -9,19 +9,19 @@ Changing directory to the project folder:
  cd src
 ```
 
-In order to install all dependencies, all of them can be found in requirements.txt:
+In order to install all dependencies, which can be found in requirements.txt:
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-> :warning: **If you are using an environment**: Be sure to install all dependencies in the desired environment!
+> :warning: **If you are using a custom environment**: Be sure to install all dependencies in the desired one!
+
 > :warning: **Python version**: You may need to use python3 / python3.x depending on your installation
 
 In order to run the project:
 ```bash
 python main.py
 ```
-
 > :warning: **Python version**: You may need to use python3 / python3.x depending on your installation
 
 Tensorboard:
