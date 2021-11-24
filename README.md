@@ -33,7 +33,7 @@ python src/main.py
 > :warning: **Python version**: You may need to use python3 / python3.x depending on your installation
 Tensorboard:
 ```bash
-python -m tensorboard.main --logdir logs
+python -m tensorboard.main --logdir src/logs( |1|2|3)
 ```
 > :warning: **Python version**: You may need to use python3 / python3.x depending on your installation
 
