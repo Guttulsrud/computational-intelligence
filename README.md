@@ -2,7 +2,7 @@
 ACIT 4620 
 ----------
 
-## Traffic sign classification using a Deep Convolutional Neural Network in Python
+## Traffic sign classification using Deep Convolutional Neural Networks in Python
 
 Changing directory to the project folder:
 ```bash
