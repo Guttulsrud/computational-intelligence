@@ -31,9 +31,13 @@ python src/main.py
 > :warning: **Python version**: You may need to use python3 / python3.x depending on your installation
 Tensorboard:
 ```bash
-tensorboard --logdir logs
+python -m tensorboard.main --logdir logs
 ```
+> :warning: **Python version**: You may need to use python3 / python3.x depending on your installation
+
 > :heavy_check_mark: **Tensorflow GPU utilization**: If you want to enable GPU training, make sure to follow this [guide](https://www.tensorflow.org/install/gpu) step by step
+
+Tensorboard will show some graphs at the end of the epochs and others at the end of runs.
 
 Classes:
 
