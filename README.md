@@ -9,6 +9,7 @@ In order to install all dependencies, which can be found in requirements.txt:
 python -m pip install -r requirements.txt
 ```
 > :warning: **If you are using a custom environment**: Be sure to install all dependencies in the desired one!
+
 > :warning: **Python version**: You may need to use python3 / python3.x depending on your installation
 
 In order to run the project:
