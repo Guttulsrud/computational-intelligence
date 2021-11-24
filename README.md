@@ -33,7 +33,21 @@ python src/main.py
 > :warning: **Python version**: You may need to use python3 / python3.x depending on your installation
 Tensorboard:
 ```bash
-python -m tensorboard.main --logdir src/logs( |1|2|3)
+python -m tensorboard.main --logdir src/logs
+```
+
+## For our training runs try these:
+Architecture run
+```bash
+python -m tensorboard.main --logdir src/logs1
+```
+Hyperparameter run
+```bash
+python -m tensorboard.main --logdir src/logs2
+```
+Fine tuning hyperparameter run
+```bash
+python -m tensorboard.main --logdir src/logs3
 ```
 > :warning: **Python version**: You may need to use python3 / python3.x depending on your installation
 
