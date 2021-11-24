@@ -4,17 +4,6 @@ ACIT 4620
 
 ## Traffic sign classification using Deep Convolutional Neural Networks in Python
 
-## Download the data
-
-Data can be downloaded from the following [link](https://www.kaggle.com/valentynsichkar/traffic-signs-classification-with-cnn/data?select=data0.pickle)
-
-Make sure to unzip the .pickle file and put it inside the repository folder
-
-To extract the pickle run:
-```bash
-python download_data.py
-```
-
 In order to install all dependencies, which can be found in requirements.txt:
 ```bash
 python -m pip install -r requirements.txt
@@ -23,6 +12,18 @@ python -m pip install -r requirements.txt
 
 > :warning: **Python version**: You may need to use python3 / python3.x depending on your installation
 
+## Download the data
+
+Data can be downloaded from the following [link](https://www.kaggle.com/valentynsichkar/traffic-signs-classification-with-cnn/data?select=data0.pickle)
+
+Data sources -> Traffic signs preprocessed -> data0.pickle
+
+Make sure to unzip the .pickle file and put it inside the repository folder -> data -> pickle
+
+To extract the pickle run:
+```bash
+python src/download_data.py
+```
 In order to run the project:
 ```bash
 python src/main.py
